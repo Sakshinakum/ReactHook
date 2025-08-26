@@ -1,0 +1,126 @@
+import { useState } from 'react'
+import reactLogo from './assets/react.svg'
+import viteLogo from '/vite.svg'
+import './App.css'
+import { useForm } from 'react-hook-form'
+
+function App() {
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm()
+  
+  const [fullname, setFullName] = useState();
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+  const [number, setNumber] = useState();
+  const [city, setCity] = useState();
+  const [gender, setGender] = useState();
+
+
+  const onSubmit = () => {
+    localStorage.setItem("fullname", fullname);
+    localStorage.setItem("email", email);
+    localStorage.setItem("password", password);
+    localStorage.setItem("number", number);
+    localStorage.setItem("city", city);
+    localStorage.setItem("gender", gender);
+  }
+
+  return (
+        <div className="form-hook">
+          <div className="form-container">
+              <form onSubmit={handleSubmit(onSubmit)}>
+                  <label htmlFor="fullname">Full Name</label>
+                  <input  {...register("fullname",
+                      {
+                        required: {value: true, message: 'This field is required'},
+                        minLength: {value: 4, message: 'min length at least 4 character'}
+                      })} value={fullname} onChange={(e) => setFullName(e.target.value)} className='form-input' placeholder='Enter your Full name'/>
+                  {errors.fullname && <p className='error-msg'>{errors.fullname.message}</p>}
+
+                  <label htmlFor="email">Email</label>
+                  <input {...register("email",
+                    { 
+                      required: {value: true, message: 'This field is required' },
+                      pattern: {value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'At least one character ,followed by the “@” symbol, then the domain part'},
+                      })}  value={email} onChange={(e) => setEmail(e.target.value)} className='form-input' placeholder='Enter your Email' />
+                  {errors.email && <p className='error-msg'>{errors.email.message}</p>}
+
+                  <label htmlFor="password">Password</label>
+                  <input type="password" {...register("password", 
+                  {  
+                    required: {value: true, message: 'This field is required'},
+                    pattern: {value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&])[A-Za-z\d@.#$!%*?&]{8,15}$/, message: 'At least 8 characters, one uppercase letter, one lowercase letter , one digit, one special character'}
+
+                  })} value={password} onChange={(e) => setPassword(e.target.value)} className='form-input' placeholder='Enter your password' />
+                  {errors.password && <p className='error-msg'>{errors.password.message}</p>}
+
+                  <label htmlFor="number">Phone Number</label>
+                  <input  {...register("number",
+                    {
+                      required: {value: true, message: 'This field is required'},
+                      pattern: {value: /^[0-9]{10}$/, message: 'Enter valid 10-digit phone number'}
+                      })} value={number} onChange={(e) => setNumber(e.target.value)} className='form-input' placeholder='Enter your Phone Number' />
+                  {errors.number && <p className='error-msg'>{errors.number.message}</p>}
+
+                  <label htmlFor="city">Select  city</label>
+                  <select value={city} onChange={(e) => setCity(e.target.value)} {...register("city", 
+                    { 
+                      required: {value: true, message: 'This field is required'} 
+
+                    })}  className='form-input'>
+                      <option value="">--Select a City--</option>
+                      <option value="baroda">Baroda</option>
+                      <option value="suart">Surat</option>
+                      <option value="rajkot">Rajkot</option>
+                  </select>
+                  {errors.city && <p className='error-msg'>{errors.city.message}</p>}
+
+                  <label htmlFor='gender'>Choose your Gender</label>
+                  <div  className="radio-group">              
+                      <label>
+                          <input  type="radio" name="gender" value={gender} onChange={(e) => setGender(e.target.value)}  {...register("gender", 
+                              { 
+                                required: {value: true, message:'This field is required'}  
+                              })} /> Male
+                      </label>
+                    
+                      <label>
+                          <input type="radio" name="gender" value={gender} onChange={(e) => setGender(e.target.value)} {...register("gender", 
+                              { 
+                                required: {value: true, message:'This field is required'}  
+                              })}/> Female
+                      </label>
+                      <label>
+                          <input type="radio" name="gender" value={gender} onChange={(e) => setGender(e.target.value)} {...register("gender", 
+                              { 
+                                required: {value: true, message:'This field is required'}  
+                              })}/> Other
+                      </label> 
+                      {errors.gender && <p className='error-msg'>{errors.gender.message}</p>}
+                  </div>
+                    
+                    <div className='tnc'>
+                      <input type='checkbox' id='tnc' name='tnc' {...register("tnc",
+                        { 
+                          required: 'This field is required'
+                        })}/>
+                      <label className='tnc-label'>I agree all terms and conditions.</label>  
+                    </div>
+                    {errors.tnc && <p className='error-msg'>{errors.tnc.message}</p>}
+                  
+                  <br />
+                    <button type="submit">Register</button>
+              </form>
+          </div>
+        </div>
+        
+     
+   
+  )
+}
+
+export default App
